@@ -26,30 +26,52 @@ public:
 
         if (s.length() != goal.length()) return false;  //diff len
 
-        string sSorted = s;
-        sort(sSorted.begin(), sSorted.end());
         if (s == goal)  //if same
         {
+            sort(s.begin(), s.end());
             for (int i = 1; i < s.length(); i++)
-            {
-                if (sSorted[i] == sSorted[i-1]) return true; //has dupe, just swap dupes
-            }
+                if (s[i] == s[i-1]) return true; //has dupe, just swap dupes
+
             return false; //no dupes, can't swap anything
         }
 
-        string gSorted = goal;
-        sort(gSorted.begin(), gSorted.end());
-        if (sSorted != gSorted) return false; //diff char ct
-
         int numDiff = 0;
+        int wrongIndex1, wrongIndex2;
         for (int i = 0; i < s.length(); i++)
         {
             if (s[i] != goal[i])
             {
-                if (numDiff > 1) return false;  //>2 diffs, can't achieve w/ 1 swap
+                switch(numDiff)
+                {
+                    case 0:
+                        wrongIndex1=i;  //save to swap later
+                        break;
+                    case 1:
+                        wrongIndex2=i;  //save to swap later
+                        break;
+                    case 2:             //>2 diffs, can't achieve w/ 1 swap
+                        return false;
+                };
                 numDiff++;
             }
         }
-        return true;
+
+        if (numDiff != 2) return false;     //<2 diffs, can't swap, diff ct
+        
+        //aaaab vs aabaa    yes     yynyn               2 diff (n's)
+        //  s       goal
+
+        //wrongIndex1 = 2,  wrongIndex2 = 4   
+        //temp = s[2] = a
+        //s[2] = s[4] = b
+        //s[4] = temp;
+        //result:     s=aabaa, which equals goal OK
+
+        //attempt to make same by swapping the two found wrong indexes:
+        char temp = s[wrongIndex1];
+        s[wrongIndex1] = s[wrongIndex2];
+        s[wrongIndex2] = temp; 
+
+        return (s == goal); //if swap didn't work, diff char ct
     }
 };
