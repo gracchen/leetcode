@@ -32,7 +32,7 @@ public:
             if (next(it) == hash.end()) ans.push_back(-1); //if no greater element globally
             else
             {
-                int i = it->second + 1; //no need to check target
+                int i = it->second;
                 for (; i < nums2.size(); i++)
                 {
                     if (nums2[i] > it->first)
